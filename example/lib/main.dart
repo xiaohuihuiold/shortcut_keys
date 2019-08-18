@@ -57,20 +57,46 @@ class _HomePageState extends State<HomePage> {
           height: double.infinity,
           child: Text(''),
         ),
-        shortcuts: {
-          [ShortcutKeys.CTRL_LEFT, ShortcutKeys.S]: () {
-            print('保存');
-          },
-          [ShortcutKeys.CTRL_LEFT, ShortcutKeys.C]: () {
-            print('复制');
-          },
-          [ShortcutKeys.CTRL_LEFT, ShortcutKeys.ALT_LEFT, ShortcutKeys.L]: () {
-            print('格式化');
-          },
-          [ShortcutKeys.CTRL_LEFT, ShortcutKeys.MOUSE_SCROLL]: (event) {
-            print('滚动:$event');
-          },
-        },
+        shortcutData: [
+          ShortcutData(
+            shortcuts: [
+              ShortcutKeys.CTRL_LEFT,
+              ShortcutKeys.S,
+            ],
+            trigger: () {
+              print('保存');
+            },
+          ),
+          ShortcutData(
+            shortcuts: [
+              ShortcutKeys.CTRL_LEFT,
+              ShortcutKeys.C,
+            ],
+            trigger: () {
+              print('复制');
+            },
+          ),
+          ShortcutData(
+            shortcuts: [
+              ShortcutKeys.CTRL_LEFT,
+              ShortcutKeys.ALT_LEFT,
+              ShortcutKeys.L,
+            ],
+            trigger: () {
+              print('格式化');
+            },
+          ),
+          ShortcutData(
+            shortcuts: [
+              ShortcutKeys.CTRL_LEFT,
+              ShortcutKeys.ALT_LEFT,
+              ShortcutKeys.MOUSE_REGION,
+            ],
+            trigger: (event) {
+              print('滚动:$event');
+            },
+          ),
+        ],
       ),
     );
   }

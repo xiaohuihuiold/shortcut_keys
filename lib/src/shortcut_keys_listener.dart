@@ -45,7 +45,7 @@ class ShortcutKeysListener extends StatefulWidget {
   final PointerSignalEventListener onPointerSignal;
 
   /// 快捷键设置
-  final Map<List<ShortcutKeys>, Function> shortcuts;
+  final List<ShortcutData> shortcutData;
 
   /// 子组件
   final Widget child;
@@ -57,7 +57,6 @@ class ShortcutKeysListener extends StatefulWidget {
     this.onKey,
     this.onKeyDown,
     this.onKeyUp,
-    this.shortcuts,
     this.onMouseEnter,
     this.onMouseHover,
     this.onMouseExit,
@@ -66,6 +65,7 @@ class ShortcutKeysListener extends StatefulWidget {
     this.onPointerUp,
     this.onPointerCancel,
     this.onPointerSignal,
+    this.shortcutData,
   }) : super(key: key);
 
   @override
@@ -112,27 +112,14 @@ class _ShortcutKeysListenerState extends State<ShortcutKeysListener> {
     // 添加当前按键到已按下的按键中
     _keyEvent.add(key);
     // 循环遍历快捷键调用
-    List<List<ShortcutKeys>> keys = widget.shortcuts?.keys?.toList() ?? List();
-    for (int i = 0; i < keys.length; i++) {
-      Function callback = widget.shortcuts[keys[i]];
-      if (callback is! VoidCallback) {
-        // 如果不是空参数的Function则证明是有鼠标操作的快捷键,不需要在这里处理
+    List<ShortcutData> datas = widget.shortcutData ?? List();
+    for (int i = 0; i < datas.length; i++) {
+      ShortcutData shortcutData = datas[i];
+      if (shortcutData.hasMouse()) {
         continue;
       }
-      bool equal = true;
-      if (_keyEvent.length != keys[i].length) {
-        continue;
-      }
-      for (int j = 0; j < keys[i].length; j++) {
-        equal = _keyEvent.contains(keys[i][j]);
-        if (!equal) {
-          // 当有一个不匹配时就跳过
-          break;
-        }
-      }
-      // 快捷键完全匹配则回调
-      if (equal && callback != null) {
-        callback();
+      if (shortcutData.equalKey(_keyEvent)) {
+        shortcutData.triggerEvent();
         break;
       }
     }
@@ -218,30 +205,14 @@ class _ShortcutKeysListenerState extends State<ShortcutKeysListener> {
   /// 鼠标快捷键事件处理
   void _onMouse(ShortcutKeys shortcutKeys, event) {
     // 循环遍历快捷键调用
-    List<List<ShortcutKeys>> keys = widget.shortcuts?.keys?.toList() ?? List();
-    for (int i = 0; i < keys.length; i++) {
-      Function callback = widget.shortcuts[keys[i]];
-      if (callback is VoidCallback || !keys[i].contains(shortcutKeys)) {
-        // 如果是空参数的Function则可能只是按键操作的快捷键
+    List<ShortcutData> datas = widget.shortcutData ?? List();
+    for (int i = 0; i < datas.length; i++) {
+      ShortcutData shortcutData = datas[i];
+      if (!shortcutData.hasMouse()) {
         continue;
       }
-      bool equal = true;
-      if (_keyEvent.length != keys[i].length - 1) {
-        continue;
-      }
-      for (int j = 0; j < keys[i].length; j++) {
-        if (keys[i][j] == shortcutKeys) {
-          continue;
-        }
-        equal = _keyEvent.contains(keys[i][j]);
-        if (!equal) {
-          // 当有一个不匹配时就跳过
-          break;
-        }
-      }
-      // 快捷键完全匹配则回调
-      if (equal && callback != null) {
-        callback(event);
+      if (shortcutData.equalKey(_keyEvent, shortcutKeys)) {
+        shortcutData.triggerEvent(event);
         break;
       }
     }
