@@ -1,0 +1,18 @@
+name: shortcut_keys
+description: customize your shortcuts
+version: 0.0.1
+author: xiaohuihuiold <xiaohuihuiold@gmail.com>
+homepage: https://github.com/xiaohuihuiold/shortcut_keys
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
