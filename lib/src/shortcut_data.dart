@@ -28,9 +28,11 @@ class ShortcutData {
           return count <= 1;
         }()),
         assert(() {
-          bool hasScroll = shortcuts?.contains(ShortcutKeys.MOUSE_SCROLL) ?? false;
+          bool hasScroll =
+              shortcuts?.contains(ShortcutKeys.MOUSE_SCROLL) ?? false;
           bool hasLeft = shortcuts?.contains(ShortcutKeys.MOUSE_LEFT) ?? false;
-          bool hasRegion = shortcuts?.contains(ShortcutKeys.MOUSE_REGION) ?? false;
+          bool hasRegion =
+              shortcuts?.contains(ShortcutKeys.MOUSE_REGION) ?? false;
           if (hasScroll || hasLeft || hasRegion) {
             if (trigger is VoidCallback) {
               return false;
@@ -57,25 +59,33 @@ class ShortcutData {
   }
 
   /// 判断按下的按键是否匹配
-  bool equalKey(Set<ShortcutKeys> keys, [ShortcutKeys ignore]) {
+  bool equalKey(List<ShortcutKeys> keys, [ShortcutKeys ignore]) {
     if (keys == null || shortcuts == null) {
       return false;
     }
     if (hasMouse()) {
+      // 当有鼠标并长度不一致时,不是匹配的快捷键
       if (keys.length != shortcuts.length - 1) {
         return false;
       }
     } else {
+      // 没有鼠标,并且长度不一样,不是匹配的快捷键
       if (keys.length != shortcuts.length) {
         return false;
       }
     }
+    // 跳过的下标数
+    int jump = 0;
     for (var i = 0; i < shortcuts.length; ++i) {
       ShortcutKeys shortcutKeys = shortcuts[i];
+      // 如果需要忽略,则说明含有鼠标快捷键
       if (shortcutKeys == ignore) {
+        // 跳过一个,使得两个列表遍历的下标一样
+        jump = 1;
         continue;
       }
-      if (!keys.contains(shortcutKeys)) {
+      // 只要有一处不匹配,则不匹配
+      if (keys[i - jump] != shortcutKeys) {
         return false;
       }
     }

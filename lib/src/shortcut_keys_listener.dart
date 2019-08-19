@@ -73,7 +73,7 @@ class ShortcutKeysListener extends StatefulWidget {
 }
 
 class _ShortcutKeysListenerState extends State<ShortcutKeysListener> {
-  Set<ShortcutKeys> _keyEvent = Set();
+  List<ShortcutKeys> _keyEvent = List();
 
   /// 键盘事件回调
   void _onKey(RawKeyEvent event) {
@@ -112,9 +112,9 @@ class _ShortcutKeysListenerState extends State<ShortcutKeysListener> {
     // 添加当前按键到已按下的按键中
     _keyEvent.add(key);
     // 循环遍历快捷键调用
-    List<ShortcutData> datas = widget.shortcutData ?? List();
-    for (int i = 0; i < datas.length; i++) {
-      ShortcutData shortcutData = datas[i];
+    List<ShortcutData> shortcuts = widget.shortcutData ?? List();
+    for (int i = 0; i < shortcuts.length; i++) {
+      ShortcutData shortcutData = shortcuts[i];
       if (shortcutData.hasMouse()) {
         continue;
       }

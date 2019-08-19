@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shortcut_keys/shortcut_keys.dart';
@@ -43,6 +44,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   FocusNode _node = FocusNode();
 
+  double _x = 0;
+  double _y = 0;
+
   @override
   Widget build(BuildContext context) {
     FocusScope.of(context).requestFocus(_node);
@@ -55,7 +59,8 @@ class _HomePageState extends State<HomePage> {
         child: Container(
           width: double.infinity,
           height: double.infinity,
-          child: Text(''),
+          alignment: Alignment.center,
+          child: Text('x:$_x,y:$_y'),
         ),
         shortcutData: [
           ShortcutData(
@@ -93,7 +98,11 @@ class _HomePageState extends State<HomePage> {
               ShortcutKeys.MOUSE_REGION,
             ],
             trigger: (event) {
-              print('滚动:$event');
+              PointerHoverEvent point = event;
+              setState(() {
+                _x = point.position.dx;
+                _y = point.position.dy;
+              });
             },
           ),
         ],
