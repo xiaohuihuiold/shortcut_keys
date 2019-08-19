@@ -335,12 +335,10 @@ class ShortcutKey {
   /// 根据keycode求得对应平台的按键
   static ShortcutKeys getKey(int keyCode) {
     if (Platform.isLinux || Platform.isWindows) {
-      print('${keyLinuxAndWindows[keyCode]}:$keyCode');
       // 当运行平台是desktop时
       return keyLinuxAndWindows[keyCode];
     } else if (Platform.isAndroid) {
       // 当运行平台是android时
-      print('${keyAndroid[keyCode]}:$keyCode');
       return keyAndroid[keyCode];
     }
     // 其它不支持的平台
