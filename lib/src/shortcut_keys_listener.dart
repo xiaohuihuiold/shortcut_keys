@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -106,9 +108,21 @@ class _ShortcutKeysListenerState extends State<ShortcutKeysListener> {
 
   /// 键盘按下事件
   void _onKeyDown(RawKeyEvent event) {
-    RawKeyEventDataAndroid rawKeyEventDataAndroid = event.data;
+    int keyCode;
+
+    if (event.data is RawKeyEventDataAndroid) {
+      RawKeyEventDataAndroid rawKeyEventData = event.data;
+      keyCode = rawKeyEventData.keyCode;
+    } else if (event.data is RawKeyEventDataLinux) {
+      RawKeyEventDataLinux rawKeyEventData = event.data;
+      keyCode = rawKeyEventData.keyCode;
+    } else if (event.data is RawKeyEventDataMacOs) {
+      RawKeyEventDataMacOs rawKeyEventData = event.data;
+      keyCode = rawKeyEventData.keyCode;
+    }
+
     // 取得正确的按下的按键
-    ShortcutKeys key = ShortcutKey.getKey(rawKeyEventDataAndroid.keyCode);
+    ShortcutKeys key = ShortcutKey.getKey(keyCode);
     if (widget.onKeyDown != null) {
       // 同时回调
       widget.onKeyDown(key);
