@@ -55,12 +55,14 @@ class _HomePageState extends State<HomePage> {
         title: Text('Example'),
       ),
       body: ShortcutKeysListener(
-        focusNode: _node,
+        needFocus: false,
         child: Container(
           width: double.infinity,
           height: double.infinity,
           alignment: Alignment.center,
-          child: Text('x:$_x,y:$_y'),
+          child: TextField(
+            focusNode: _node,
+          ),
         ),
         shortcutData: [
           ShortcutData(

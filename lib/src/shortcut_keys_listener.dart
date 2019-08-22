@@ -11,6 +11,9 @@ class ShortcutKeysListener extends StatefulWidget {
   /// 设置当前焦点
   final FocusNode focusNode;
 
+  /// 设置是否需要焦点
+  final bool needFocus;
+
   /// 接收到键盘事件的回调
   final ValueChanged<RawKeyEvent> onKey;
 
@@ -52,7 +55,8 @@ class ShortcutKeysListener extends StatefulWidget {
 
   const ShortcutKeysListener({
     Key key,
-    @required this.focusNode,
+    this.focusNode,
+    this.needFocus = true,
     @required this.child,
     this.onKey,
     this.onKeyDown,
@@ -219,8 +223,17 @@ class _ShortcutKeysListenerState extends State<ShortcutKeysListener> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    if (!widget.needFocus) {
+      RawKeyboard.instance.addListener(_onKey);
+    }
+  }
+
+  @override
   void dispose() {
     _keyEvent.clear();
+    RawKeyboard.instance.removeListener(_onKey);
     super.dispose();
   }
 
@@ -236,11 +249,13 @@ class _ShortcutKeysListenerState extends State<ShortcutKeysListener> {
         onPointerDown: _onPointerDown,
         onPointerCancel: _onPointerCancel,
         onPointerUp: _onPointerUp,
-        child: RawKeyboardListener(
-          focusNode: widget.focusNode,
-          onKey: _onKey,
-          child: widget.child,
-        ),
+        child: widget.needFocus
+            ? RawKeyboardListener(
+                focusNode: widget.focusNode,
+                onKey: _onKey,
+                child: widget.child,
+              )
+            : widget.child,
       ),
     );
   }
